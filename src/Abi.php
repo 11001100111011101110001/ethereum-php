@@ -4,6 +4,7 @@ namespace Ethereum;
 
 use Ethereum\DataType\EthD;
 use Ethereum\DataType\EthDataType;
+use Ethereum\DataType\EthS;
 use Ethereum\RLP\Rlp;
 
 class Abi extends EthereumStatic
@@ -46,7 +47,9 @@ class Abi extends EthereumStatic
         foreach ($values as $i => $val) {
             $expectedType = $m->inputs[$i]->type;
             $validAbiType = self::convertByAbi($expectedType, $val);
-            $params .= EthereumStatic::removeHexPrefix($validAbiType->encodedHexVal());
+            $string = EthereumStatic::removeHexPrefix($validAbiType->encodedHexVal());
+            $fillUp = 64 - (strlen($string) % 64);
+            $params .= $fillUp < 64 ? str_repeat("0", $fillUp).$string : $string;
         }
         return new EthD($params);
     }
@@ -161,6 +164,7 @@ class Abi extends EthereumStatic
      */
     private static function getSignature($m)
     {
+        //var_dump($m);die;
         $sign = $m->name . '(';
         foreach ($m->inputs as $i => $item) {
             $sign .= $item->type;

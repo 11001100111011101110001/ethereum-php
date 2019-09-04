@@ -284,7 +284,6 @@ class Ethereum extends EthereumStatic implements Web3Interface
             $return = $this->arrayToComplexType($class_name, $value);
         }
         elseif (!$is_primitive) {
-
             if ($array_val) {
                 if ($method === 'eth_getFilterChanges') {
                     // Only be [FilterChange| D32]
@@ -581,7 +580,24 @@ class Ethereum extends EthereumStatic implements Web3Interface
             if (is_array($val)) {
                 $return[$i] = self::arrayToComplexType($typeClass, $val);
             }
-            $return[$i] = new $typeClass($val);
+
+            if ($typeClass == '\Ethereum\DataType\FilterChange') {
+                $return[$i] = new $typeClass(
+                    $val->removed,
+                    $val->logIndex,
+                    $val->transactionIndex,
+                    $val->transactionHash,
+                    $val->blockHash,
+                    $val->blockNumber,
+                    $val->address,
+                    $val->data,
+                    $val->topics
+                );
+                $return[$i] = $return[$i]->toArray();
+            } else {
+                $return[$i] = new $typeClass($val);
+                $return[$i] = $return[$i]->val();
+            }
         }
         return $return;
     }

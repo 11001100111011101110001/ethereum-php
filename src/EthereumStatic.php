@@ -28,7 +28,6 @@ abstract class EthereumStatic
      */
     public static function getMethodSignature($input)
     {
-
         if (self::isValidFunction($input)) {
             // The signature is 4bytes of the methods keccac hash. E.g: "0x00000000".
             return self::ensureHexPrefix(substr(self::sha3($input), 0, 10));
@@ -238,6 +237,9 @@ abstract class EthereumStatic
      */
     public static function hasHexPrefix($str)
     {
+        if (is_object($str)) {
+            $str = $str->val();
+        }
         return substr($str, 0, 2) === '0x';
     }
 
@@ -273,7 +275,8 @@ abstract class EthereumStatic
         if (self::hasHexPrefix($str)) {
             return $str;
         }
-        return '0x' . $str;
+
+        return '0x' . (is_object($str) ? $str->val() : $str);
     }
 
     /**

@@ -366,7 +366,7 @@ trait Web3Methods {
 	 * @param EthBlockParam $arg2
 	 * @return null|EthQ
 	 */
-	public function eth_estimateGas(EstimateTransaction $arg1, EthBlockParam $arg2) {
+	public function eth_estimateGas(EstimateTransaction $arg1, EthBlockParam $arg2 = null) {
 		return $this->__call(__FUNCTION__, func_get_args());
 	}
 

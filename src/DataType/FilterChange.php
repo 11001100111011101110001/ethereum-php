@@ -10,6 +10,7 @@
  */
 namespace Ethereum\DataType;
 
+use Ethereum\Ethereum;
 /**
  * Ethereum data type FilterChange.
  * 
@@ -115,7 +116,7 @@ class FilterChange extends EthDataType {
 		(!is_null($this->blockNumber)) ? $return['blockNumber'] = $this->blockNumber->hexVal() : NULL; 
 		(!is_null($this->address)) ? $return['address'] = $this->address->hexVal() : NULL; 
 		(!is_null($this->data)) ? $return['data'] = $this->data->hexVal() : NULL; 
-		(!is_null($this->topics)) ? $return['topics'] = Ethereum::valueArray($this->topics, 'EthD32') : array(); 
+		(!is_null($this->topics)) ? $return['topics'] = Ethereum::valueArray($this->topics, 'EthD32') : array();
 		return $return;
 	}
 }

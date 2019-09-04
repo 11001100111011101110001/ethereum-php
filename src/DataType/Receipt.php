@@ -10,6 +10,9 @@
  */
 namespace Ethereum\DataType;
 
+use Ethereum\Ethereum;
+use Ethereum\EthereumStatic;
+
 /**
  * Ethereum data type Receipt.
  * 
@@ -114,8 +117,8 @@ class Receipt extends EthDataType {
 		(!is_null($this->cumulativeGasUsed)) ? $return['cumulativeGasUsed'] = $this->cumulativeGasUsed->hexVal() : NULL; 
 		(!is_null($this->gasUsed)) ? $return['gasUsed'] = $this->gasUsed->hexVal() : NULL; 
 		(!is_null($this->contractAddress)) ? $return['contractAddress'] = $this->contractAddress->hexVal() : NULL; 
-		(!is_null($this->status)) ? $return['status'] = $this->status->hexVal() : NULL; 
-		(!is_null($this->logs)) ? $return['logs'] = Ethereum::valueArray($this->logs, 'FilterChange') : array(); 
+		(!is_null($this->status)) ? $return['status'] = EthereumStatic::removeHexPrefix($this->status) : NULL;
+		(!is_null($this->logs)) ? $return['logs'] = Ethereum::valueArray($this->logs, 'FilterChange') : array();
 		return $return;
 	}
 }

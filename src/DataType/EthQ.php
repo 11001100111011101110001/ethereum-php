@@ -26,6 +26,9 @@ class EthQ extends EthD
      */
     protected $abi;
 
+    //是否补0
+    protected $isFill;
+
     // Non not RLP encoded values have a hex padding length of 64 (strlen).
     // See:https://github.com/ethereum/wiki/wiki/RLP
     const HEXPADDING = 64;
@@ -40,8 +43,9 @@ class EthQ extends EthD
      *
      * @throws Exception
      */
-    public function __construct($val, array $params = [])
+    public function __construct($val, array $params = [], $isFill = true)
     {
+        $this->isFill = $isFill;
         parent::__construct($val, $params);
     }
 
@@ -245,7 +249,6 @@ class EthQ extends EthD
      */
     public function hexVal()
     {
-
         // Ethereum requires two's complement.
         // Math_BigInteger->toHex( [Boolean $twos_compliment = false])
         $value = $this->value->toHex($this->value->is_negative);
@@ -254,11 +257,15 @@ class EthQ extends EthD
             throw new \Exception('Values > (u)int32 not supported yet: ' . $value);
         }
 
-        // Calc padding.
-        $pad = self::HEXPADDING - strlen($value);
-
-        $fill = $this->value->is_negative ? 'f' : '0';
-        $ret = '0x' . str_repeat($fill, $pad) . $value;
+        $ret = '0x';
+        if ($this->isFill) {
+            // Calc padding.
+            $pad = self::HEXPADDING - strlen($value);
+            $fill = $this->value->is_negative ? 'f' : '0';
+            $ret .= str_repeat($fill, $pad) . $value;
+        } else {
+            $ret .= $value;
+        }
 
         return $ret;
     }
